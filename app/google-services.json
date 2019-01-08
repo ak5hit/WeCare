@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "243692516848",
+    "firebase_url": "https://wecare-cd625.firebaseio.com",
+    "project_id": "wecare-cd625",
+    "storage_bucket": "wecare-cd625.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243692516848:android:60963a3590074072",
+        "android_client_info": {
+          "package_name": "com.noblegas.wecare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243692516848-ke0rfbcm45pvd259au9c1kk66otqo2cn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.noblegas.wecare",
+            "certificate_hash": "d9eb6f8021e2061442956a4a822d9e667d115a96"
+          }
+        },
+        {
+          "client_id": "243692516848-3je9oir660aj2hj7hlfqhi8ed2o8636u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhRlDcKUrWTw-4SEyidlPrDaYQ8HyKN8E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243692516848-3je9oir660aj2hj7hlfqhi8ed2o8636u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">WeCare</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_sign_out">Sign Out</string>
+    <string name="phone_number_input_hint">Phone Number</string>
+    <string name="verify_number_button">Verify Phone Number</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="verify_otp_button">Continue</string>
+    <string name="otp_input_hint">-</string>
+    <string name="otp_instruction">Enter the 6-digit code that we sent to</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="invalid_number_input_error">Enter a valid phone number</string>
+    <string name="enter_valid_otp">Enter Valid OTP</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_about_us">About Us</string>
+    <string name="open_drawer">open_drawer</string>
+    <string name="close_drawer">close_drawer</string>
+    <string name="nav_other_title">Other</string>
+</resources>
