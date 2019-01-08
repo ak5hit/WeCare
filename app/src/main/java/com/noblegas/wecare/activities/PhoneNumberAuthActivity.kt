@@ -39,7 +39,7 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
                 phone_number_tv.text = getEnteredPhoneNumber()
                 startPhoneNumberVerification(getEnteredPhoneNumber())
             } else {
-                phone_number_input.error = getString(R.string.invalid_number_input_error)
+                phone_number_input.error = getString(R.string.empty_input_error)
                 hideProgress()
             }
         }
@@ -55,6 +55,10 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
             }
         }
 
+        resend_code_TV.setOnClickListener {
+            resendVerificationCode()
+        }
+
         mPhoneNumberVerificationStateChangeListener =
                 object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -68,6 +72,8 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
                     override fun onCodeSent(verificationId: String?, token: PhoneAuthProvider.ForceResendingToken?) {
                         super.onCodeSent(verificationId, token)
 
+                        toast("OnCodeSentCalled")
+
                         mStoredToken = token
                         mStoredVerificationId = verificationId
 
@@ -80,8 +86,7 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
                         if (exception is FirebaseAuthInvalidCredentialsException) {
                             Snackbar.make(phone_number_input, "Invalid phone number.", Snackbar.LENGTH_SHORT)
                         } else {
-                            longToast("Something went Wrong!! Try Again.")
-                            hideProgress()
+                            toast("Something went wrong!! Try Again later.")
                         }
                     }
                 }
@@ -118,43 +123,33 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
 
     private fun loadOTPVerificationGroup() {
         disableVerifyOTPButton()
+        otp_input_1.requestFocus()
         verify_otp_group.visibility = View.VISIBLE
         verify_number_group.visibility = View.GONE
     }
 
-    private fun initializeOTPInputView() {
-        otp_input_1.addTextChangedListener(OTPInputWatcher(otp_input_1, otp_input_2))
-        otp_input_2.addTextChangedListener(OTPInputWatcher(otp_input_1, otp_input_3))
-        otp_input_3.addTextChangedListener(OTPInputWatcher(otp_input_2, otp_input_4))
-        otp_input_4.addTextChangedListener(OTPInputWatcher(otp_input_3, otp_input_5))
-        otp_input_5.addTextChangedListener(OTPInputWatcher(otp_input_4, otp_input_6))
-        otp_input_6.addTextChangedListener(OTPInputWatcher(otp_input_5, otp_input_6))
-        otp_input_6.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (otp_input_6.text.isNullOrEmpty()) {
-                    verify_otp_button.isEnabled = false
-                    verify_otp_button.background.setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY)
-                } else {
-                    verify_otp_button.isEnabled = true
-                    verify_otp_button.background.colorFilter = null
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        })
+    private fun resendVerificationCode() {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            getEnteredPhoneNumber(),
+            60,
+            TimeUnit.SECONDS,
+            this,
+            mPhoneNumberVerificationStateChangeListener,
+            mStoredToken
+        )
     }
 
     private fun startResendTimer() {
+        resend_code_TV.isClickable = false
+        resend_code_TV.setTextColor(Color.parseColor("#aaaaaa"))
         object : CountDownTimer(30000, 1000) {
             override fun onFinish() {
                 resend_code_TV.isClickable = true
-                resend_code_TV.text = getString(R.string.resend_code)
+                resend_code_TV.text = getString(R.string.resend_code_tv)
                 resend_code_TV.setTextColor(Color.parseColor("#4A85E3"))
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                resend_code_TV.isClickable = false
                 resend_code_TV.text = "Resend 00:${String.format("%02d", millisUntilFinished.div(1000).toInt())}"
             }
         }.start()
@@ -203,7 +198,31 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
         verify_otp_button.background.setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY)
     }
 
+    private fun initializeOTPInputView() {
+        otp_input_1.addTextChangedListener(OTPInputWatcher(otp_input_1, otp_input_2))
+        otp_input_2.addTextChangedListener(OTPInputWatcher(otp_input_1, otp_input_3))
+        otp_input_3.addTextChangedListener(OTPInputWatcher(otp_input_2, otp_input_4))
+        otp_input_4.addTextChangedListener(OTPInputWatcher(otp_input_3, otp_input_5))
+        otp_input_5.addTextChangedListener(OTPInputWatcher(otp_input_4, otp_input_6))
+        otp_input_6.addTextChangedListener(OTPInputWatcher(otp_input_5, otp_input_6))
+        otp_input_6.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (otp_input_6.text.isNullOrEmpty()) {
+                    verify_otp_button.isEnabled = false
+                    verify_otp_button.background.setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY)
+                } else {
+                    verify_otp_button.isEnabled = true
+                    verify_otp_button.background.colorFilter = null
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
+    }
+
     private fun cleanOTPInputs() {
+        disableVerifyOTPButton()
         otp_input_1.setText("")
         otp_input_2.setText("")
         otp_input_3.setText("")

@@ -10,8 +10,8 @@
     <string name="verify_otp_button">Continue</string>
     <string name="otp_input_hint">-</string>
     <string name="otp_instruction">Enter the 6-digit code that we sent to</string>
-    <string name="resend_code">Resend Code</string>
-    <string name="invalid_number_input_error">Enter a valid phone number</string>
+    <string name="resend_code_tv">Resend Code</string>
+    <string name="empty_input_error">This field should not be empty</string>
     <string name="enter_valid_otp">Enter Valid OTP</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
