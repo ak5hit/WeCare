@@ -53,11 +53,13 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuthStateListener = FirebaseAuth.AuthStateListener {
             mCurrentUser = mFirebaseAuth.currentUser
 
+//            toast("Auth Listener Called")
+
             if (mCurrentUser != null) {
                 // User is signed in
 
                 onSignInInitialization()
-                if (mCurrentUser?.phoneNumber == null) {
+                if (mCurrentUser?.phoneNumber.isNullOrEmpty()) {
                     startActivity(Intent(this, PhoneNumberAuthActivity::class.java))
                 }
             } else {
@@ -107,6 +109,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun onSignInInitialization() {
+        loadNavHeader()
+    }
+
+    private fun onSignOutCleanUp() {
+    }
+
     private fun loadNavHeader() {
         mNameTV.text = mCurrentUser?.displayName
         mEmailTV.text = mCurrentUser?.email
@@ -119,13 +128,6 @@ class MainActivity : AppCompatActivity() {
                 .transition(DrawableTransitionOptions().crossFade())
                 .into(mProfileImage)
         }
-    }
-
-    private fun onSignInInitialization() {
-        loadNavHeader()
-    }
-
-    private fun onSignOutCleanUp() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

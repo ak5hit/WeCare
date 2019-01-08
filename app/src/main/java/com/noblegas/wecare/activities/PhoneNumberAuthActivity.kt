@@ -30,11 +30,12 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_number_auth)
-        title = "Enter Phone Number"
+        title = getString(R.string.enter_phone_number)
 
         verify_number_button.setOnClickListener {
             if (!phone_number_input.text.isNullOrEmpty()) {
                 showProgress()
+                title = getString(R.string.enter_security_code)
                 phone_number_tv.text = getEnteredPhoneNumber()
                 startPhoneNumberVerification(getEnteredPhoneNumber())
             } else {
@@ -210,5 +211,9 @@ class PhoneNumberAuthActivity : AppCompatActivity() {
         otp_input_5.setText("")
         otp_input_6.setText("")
         otp_input_1.requestFocus()
+    }
+
+    override fun onBackPressed() {
+        longToast(getString(R.string.mandatory_verification_message))
     }
 }

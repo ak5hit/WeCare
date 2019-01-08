@@ -13,7 +13,6 @@
     <string name="resend_code">Resend Code</string>
     <string name="invalid_number_input_error">Enter a valid phone number</string>
     <string name="enter_valid_otp">Enter Valid OTP</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -25,4 +24,7 @@
     <string name="open_drawer">open_drawer</string>
     <string name="close_drawer">close_drawer</string>
     <string name="nav_other_title">Other</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="enter_security_code">Enter Security Code</string>
+    <string name="mandatory_verification_message">Verification is Mandatory</string>
 </resources>
