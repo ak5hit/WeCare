@@ -16,6 +16,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.noblegas.wecare.R
 import com.noblegas.wecare.misc.OTPInputWatcher
+import com.noblegas.wecare.models.Medicine
 import kotlinx.android.synthetic.main.activity_phone_number_auth.*
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast

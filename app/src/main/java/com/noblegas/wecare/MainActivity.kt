@@ -18,6 +18,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.noblegas.wecare.activities.AddMedicineActivity
 import com.noblegas.wecare.activities.PhoneNumberAuthActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         mFirebaseAuth.addAuthStateListener(mFirebaseAuthStateListener)
+
+        add_medicine_fab.setOnClickListener { startActivity(Intent(this, AddMedicineActivity::class.java)) }
 
         setUpNavigationDrawer()
     }

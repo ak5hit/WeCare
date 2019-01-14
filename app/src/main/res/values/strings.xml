@@ -27,4 +27,20 @@
     <string name="enter_phone_number">Enter Phone Number</string>
     <string name="enter_security_code">Enter Security Code</string>
     <string name="mandatory_verification_message">Verification is Mandatory</string>
+    <string name="choose_images_button">Choose Images</string>
+    <string name="medicine_name_hint">Medicine</string>
+    <string name="expiry_date_tv_hint">dd/mm/yyyy</string>
+    <string name="action_save">Save</string>
+    <string name="expiry_date_error">Select an Expiry Date</string>
+    <string name="no_image_selected_error">Select at least 1 image</string>
+    <string name="editingActivityBackButtonAlert">Discard your changes and quit editing?</string>
+    <string name="keep_editing">KEEP EDITING</string>
+    <string name="discard">DISCARD</string>
+    <string name="add_medicine_label">Add Medicine</string>
+    <string name="radio_tablet">Tablet</string>
+    <string name="radio_syrup">Syrup</string>
+    <string name="quantity_hint">Quantity</string>
+    <string name="expiry_date_tv">Expiry Date:</string>
+    <string name="tablets_string">tablets</string>
+    <string name="ml_string">mL</string>
 </resources>
