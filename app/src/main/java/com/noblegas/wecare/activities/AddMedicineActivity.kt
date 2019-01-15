@@ -48,8 +48,6 @@ class AddMedicineActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_medicine)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        medicine_name_input.requestFocus()
-
         mSelectedImages = ArrayList()
 
         mFirebaseStorage = FirebaseStorage.getInstance()
@@ -61,12 +59,15 @@ class AddMedicineActivity : AppCompatActivity() {
 
         expiry_date_tv.setOnClickListener {
             val c = Calendar.getInstance()
-            DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 val dateFormat = SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH)
                 val date = dateFormat.parse("$day/$month/$year")
                 mExpiryDate = date.time
                 expiry_date_tv.text = "$day/${month + 1}/$year"
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
+            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
+
+            dpd.datePicker.minDate = System.currentTimeMillis().minus(1000)
+            dpd.show()
         }
 
         radio_group_quantity.setOnCheckedChangeListener { radioGroup, _ ->
@@ -114,9 +115,10 @@ class AddMedicineActivity : AppCompatActivity() {
         val quantityUnit = quantity_unit.text.toString()
         val medicineName = medicine_name_input.text.toString()
         val medicineQuantity = quantity_input.text.toString().toLong()
+        val currentUser = FirebaseAuth.getInstance().currentUser
         val medicine = Medicine(
-            FirebaseAuth.getInstance().currentUser?.uid,
-            medicineQuantity, quantityUnit, mExpiryDate, medicineName
+            currentUser!!.uid, medicineQuantity,
+            quantityUnit, mExpiryDate, medicineName
         )
 
         val pd = ProgressDialog(this)
