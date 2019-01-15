@@ -56,6 +56,7 @@ class AddMedicineActivity : AppCompatActivity() {
 
         mSliderAdapter = ImageSliderAdapter(this, mSelectedImages)
         image_slider.adapter = mSliderAdapter
+        image_slider_tab_layout.setupWithViewPager(image_slider)
 
         expiry_date_tv.setOnClickListener {
             val c = Calendar.getInstance()
@@ -102,6 +103,7 @@ class AddMedicineActivity : AppCompatActivity() {
                         mSelectedImages.add(compressedImage)
                     }
                 }
+                image_slider_tab_layout.visibility = View.VISIBLE
                 image_slider.apply {
                     visibility = View.VISIBLE
                     adapter!!.notifyDataSetChanged()

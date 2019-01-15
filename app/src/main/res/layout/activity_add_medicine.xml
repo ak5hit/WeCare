@@ -131,6 +131,19 @@
                     android:layout_height="250dp">
             </android.support.v4.view.ViewPager>
 
+            <android.support.design.widget.TabLayout
+                    android:id="@+id/image_slider_tab_layout"
+                    android:visibility="gone"
+                    app:tabGravity="center"
+                    app:tabPaddingEnd="4dp"
+                    app:tabPaddingStart="4dp"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabIndicatorGravity="bottom"
+                    app:tabBackground="@drawable/image_slider_tab_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp">
+            </android.support.design.widget.TabLayout>
+
         </LinearLayout>
     </ScrollView>
 
