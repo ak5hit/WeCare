@@ -79,37 +79,7 @@ class AddMedicineActivity : AppCompatActivity() {
         }
 
         choose_images_button.setOnClickListener {
-            val chooseIntent = Intent(Intent.ACTION_GET_CONTENT)
-            chooseIntent.type = "image/*"
-            chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            startActivityForResult(chooseIntent, REQUEST_CHOOSE_PHOTOS)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CHOOSE_PHOTOS) {
-                if (data?.data != null) {
-                    // User selected single image
-                    val actualFile = File(getRealPath(data.data))
-                    val compressedFile = Compressor(this).compressToFile(actualFile)
-                    mSelectedImages.add(compressedFile)
-                } else if (data?.clipData != null) {
-                    // User selected multiple images
-                    val numberOfImages = data.clipData!!.itemCount
-                    for (i in 0 until numberOfImages) {
-                        val actualImage = File(getRealPath(data.clipData!!.getItemAt(i).uri))
-                        val compressedImage = Compressor(this).compressToFile(actualImage)
-                        mSelectedImages.add(compressedImage)
-                    }
-                }
-                image_slider_tab_layout.visibility = View.VISIBLE
-                image_slider.apply {
-                    visibility = View.VISIBLE
-                    adapter!!.notifyDataSetChanged()
-                }
-            } else if (requestCode == REQUEST_TAKE_PHOTOS && data?.data != null) {
-            }
+            handleStorageReadPermission()
         }
     }
 
@@ -146,7 +116,7 @@ class AddMedicineActivity : AppCompatActivity() {
                                     finish()
                                 } else pd.setMessage("Images Uploaded: $mImagesUploaded")
                             }
-                            .addOnFailureListener {exception ->
+                            .addOnFailureListener { exception ->
                                 longToast("Error: ${exception.message}")
                                 pd.dismiss()
                             }
@@ -155,6 +125,33 @@ class AddMedicineActivity : AppCompatActivity() {
                 .addOnFailureListener {
                     longToast("Error: ${it.message}")
                 }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CHOOSE_PHOTOS) {
+                if (data?.data != null) {
+                    // User selected single image
+                    val actualFile = File(getRealPath(data.data))
+                    val compressedFile = Compressor(this).compressToFile(actualFile)
+                    mSelectedImages.add(compressedFile)
+                } else if (data?.clipData != null) {
+                    // User selected multiple images
+                    val numberOfImages = data.clipData!!.itemCount
+                    for (i in 0 until numberOfImages) {
+                        val actualImage = File(getRealPath(data.clipData!!.getItemAt(i).uri))
+                        val compressedImage = Compressor(this).compressToFile(actualImage)
+                        mSelectedImages.add(compressedImage)
+                    }
+                }
+                image_slider_tab_layout.visibility = View.VISIBLE
+                image_slider.apply {
+                    visibility = View.VISIBLE
+                    adapter!!.notifyDataSetChanged()
+                }
+            } else if (requestCode == REQUEST_TAKE_PHOTOS && data?.data != null) {
+            }
         }
     }
 
@@ -171,7 +168,7 @@ class AddMedicineActivity : AppCompatActivity() {
             }
 
             R.id.action_save -> {
-                if (isEnteredDataCorrect()) {
+                if (isInputsValid()) {
                     uploadDataToDatabase()
                 }
             }
@@ -181,7 +178,20 @@ class AddMedicineActivity : AppCompatActivity() {
         return true
     }
 
-    private fun isEnteredDataCorrect(): Boolean {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RC_STORAGE_PERMISSION) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                startImageChooser()
+            }
+        }
+    }
+
+    private fun isInputsValid(): Boolean {
         return when {
             medicine_name_input.text.isNullOrEmpty() -> {
                 medicine_name_input.error = getString(R.string.empty_input_error)
@@ -203,6 +213,13 @@ class AddMedicineActivity : AppCompatActivity() {
         }
     }
 
+    private fun startImageChooser() {
+        val chooseIntent = Intent(Intent.ACTION_GET_CONTENT)
+        chooseIntent.type = "image/*"
+        chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(chooseIntent, REQUEST_CHOOSE_PHOTOS)
+    }
+
     private fun handleStorageReadPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -214,13 +231,15 @@ class AddMedicineActivity : AppCompatActivity() {
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 )
             ) {
-                longToast("shouldShowRequestPermission")
+                longToast(getString(R.string.storage_permission_rationale))
             } else {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), RC_STORAGE_PERMISSION
                 )
             }
+        } else {
+            startImageChooser()
         }
     }
 
@@ -253,13 +272,6 @@ class AddMedicineActivity : AppCompatActivity() {
         return filePath
     }
 
-    companion object {
-        private const val REQUEST_CHOOSE_PHOTOS = 0
-        private const val REQUEST_TAKE_PHOTOS = 1
-
-        private const val AVAILABLE_MEDICINES = "availableMedicines"
-    }
-
     override fun onBackPressed() {
         alert(getString(R.string.editingActivityBackButtonAlert)) {
             positiveButton(getString(R.string.keep_editing)) {
@@ -269,5 +281,13 @@ class AddMedicineActivity : AppCompatActivity() {
                 super.onBackPressed()
             }
         }.show()
+    }
+
+    private companion object {
+        private const val REQUEST_CHOOSE_PHOTOS = 0
+        private const val REQUEST_TAKE_PHOTOS = 1
+        private const val RC_STORAGE_PERMISSION = 101
+
+        private const val AVAILABLE_MEDICINES = "availableMedicines"
     }
 }

@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.noblegas.wecare.activities.AddMedicineActivity
@@ -53,8 +54,6 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuth = FirebaseAuth.getInstance()
         mFirebaseAuthStateListener = FirebaseAuth.AuthStateListener {
             mCurrentUser = mFirebaseAuth.currentUser
-
-//            toast("Auth Listener Called")
 
             if (mCurrentUser != null) {
                 // User is signed in
