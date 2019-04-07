@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.noblegas.wecare.activities.AddMedicineActivity
 import com.noblegas.wecare.activities.PhoneNumberAuthActivity
+import com.noblegas.wecare.fragments.AvailableMedicinesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.jetbrains.anko.toast
@@ -74,6 +76,12 @@ class MainActivity : AppCompatActivity() {
         add_medicine_fab.setOnClickListener { startActivity(Intent(this, AddMedicineActivity::class.java)) }
 
         setUpNavigationDrawer()
+        loadFragment(AvailableMedicinesFragment())
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_content_container, fragment).commit()
     }
 
     private fun createSignInIntent() {

@@ -9,12 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.TransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.noblegas.wecare.R
 import com.noblegas.wecare.models.Medicine
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class AvailableMedicinesListAdapter(
     private val mContext: Context,
@@ -22,7 +29,6 @@ class AvailableMedicinesListAdapter(
 ) : RecyclerView.Adapter<AvailableMedicinesListAdapter.AvailMedViewHolder>() {
 
     private val mLayoutInflater = LayoutInflater.from(mContext)
-
     private val mFirebaseStorage = FirebaseStorage.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailMedViewHolder {
@@ -51,11 +57,29 @@ class AvailableMedicinesListAdapter(
             val medicine = medicineData.getValue(Medicine::class.java)
             if (medicine != null) {
                 medName.text = medicine.name
+                userName.text = medicine.userID.substring(0, 5)
                 medExpiryDate.text = formatDate(medicine.expiryDate)
-                medQuantity.text = "${medicine.quantity}${medicine.quantityUnit}"
+                    medQuantity.text = "${medicine.quantity} ${medicine.quantityUnit}"
+/*
+                Glide.with(mContext)
+                    .load(FirebaseAuth.getInstance().currentUser!!.photoUrl)
+                    .apply(RequestOptions().optionalCircleCrop())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(userProfileImage)
+*/
 
-                userName.text = mFirebaseStorage.getReference(medicineData.key!!).downloadUrl.toString()
+                setupImageSlider(medicine.imageUrls)
             }
+        }
+
+        private fun setupImageSlider(imageUrlsHash: HashMap<String, String>) {
+            val imageUrls = ArrayList<String>()
+            for (keyValue in imageUrlsHash) {
+                imageUrls.add(keyValue.value)
+            }
+            val sliderAdapter = AvailableMedImageSliderAdapter(mContext, imageUrls)
+            imageSlider.adapter = sliderAdapter
+            dotIndicator.setupWithViewPager(imageSlider)
         }
 
         private fun formatDate(date: Long): String {

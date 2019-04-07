@@ -10,15 +10,14 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.noblegas.wecare.R
-import java.io.File
 
-class ImageSliderAdapter(private val mContext: Context, private var mSelectedImages: ArrayList<File>) : PagerAdapter() {
+class AvailableMedImageSliderAdapter(private val mContext: Context, private val mImageUrls: ArrayList<String>): PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_image_slider, container, false)
         val imageView = view.findViewById<ImageView>(R.id.image_view)
         Glide.with(mContext)
-            .load(mSelectedImages[position])
+            .load(mImageUrls[position])
             .transition(DrawableTransitionOptions().crossFade())
             .into(imageView)
         container.addView(view)
@@ -34,7 +33,6 @@ class ImageSliderAdapter(private val mContext: Context, private var mSelectedIma
     }
 
     override fun getCount(): Int {
-        return mSelectedImages.size
+        return mImageUrls.size
     }
-
 }

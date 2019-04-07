@@ -21,7 +21,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.noblegas.wecare.R
-import com.noblegas.wecare.adapters.ImageSliderAdapter
+import com.noblegas.wecare.adapters.AddMedImageSliderAdapter
 import com.noblegas.wecare.models.Medicine
 import id.zelory.compressor.Compressor
 import kotlinx.android.synthetic.main.activity_add_medicine.*
@@ -36,7 +36,8 @@ class AddMedicineActivity : AppCompatActivity() {
     private var mExpiryDate: Long = 0
     private var mImagesUploaded: Int = 0
     private lateinit var mSelectedImages: ArrayList<File>
-    private lateinit var mSliderAdapter: ImageSliderAdapter
+    private lateinit var mSliderAdapter: AddMedImageSliderAdapter
+    private lateinit var mImagesDownloadUrls: ArrayList<String>
 
     private lateinit var mFirebaseStorage: FirebaseStorage
     private lateinit var mFirebaseDatabase: FirebaseDatabase
@@ -49,12 +50,13 @@ class AddMedicineActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         mSelectedImages = ArrayList()
+        mImagesDownloadUrls = ArrayList()
 
         mFirebaseStorage = FirebaseStorage.getInstance()
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         mAvailableMedicinesDBRef = mFirebaseDatabase.getReference(AVAILABLE_MEDICINES)
 
-        mSliderAdapter = ImageSliderAdapter(this, mSelectedImages)
+        mSliderAdapter = AddMedImageSliderAdapter(this, mSelectedImages)
         image_slider.adapter = mSliderAdapter
         image_slider_tab_layout.setupWithViewPager(image_slider)
 
@@ -101,29 +103,38 @@ class AddMedicineActivity : AppCompatActivity() {
 
         mCurrentMedDBKey = mAvailableMedicinesDBRef.push().key
         if (mCurrentMedDBKey != null) {
-            mAvailableMedicinesDBRef.child(mCurrentMedDBKey!!).setValue(medicine)
-                .addOnSuccessListener {
-                    toast("Details Saved.")
-                    val imageStorageRef = mFirebaseStorage.getReference(mCurrentMedDBKey!!)
-                    for (i in 0 until mSelectedImages.size) {
-                        val currentImage = mSelectedImages[i]
-                        imageStorageRef.child(currentImage.name).putFile(Uri.fromFile(currentImage))
-                            .addOnSuccessListener {
-                                if (++mImagesUploaded == mSelectedImages.size) {
-                                    pd.setMessage("Images Uploaded: $mImagesUploaded")
-                                    longToast("All Images Uploaded.")
+            val currentMedDbRef = mAvailableMedicinesDBRef.child(mCurrentMedDBKey!!)
+            currentMedDbRef.setValue(medicine).addOnSuccessListener {
+                toast("Details Saved.")
+                val imageStorageRef = mFirebaseStorage.getReference(mCurrentMedDBKey!!)
+                for (i in 0 until mSelectedImages.size) {
+                    val currentImage = mSelectedImages[i]
+                    imageStorageRef.child(currentImage.name).putFile(Uri.fromFile(currentImage))
+                        .addOnSuccessListener {
+                            //mImagesDownloadUrls.add(it.metadata!!.reference!!.downloadUrl.toString())
+                            it.metadata!!.reference!!.downloadUrl.onSuccessTask { url ->
+                                currentMedDbRef.child("imageUrls").push().setValue(url.toString())
+                            }.addOnSuccessListener {
+                                    if (++mImagesUploaded == mSelectedImages.size) {
+                                        pd.setMessage("Images Uploaded: $mImagesUploaded")
+                                        longToast("All Images Uploaded.")
+                                        pd.dismiss()
+                                        finish()
+                                    } else pd.setMessage("Images Uploaded: $mImagesUploaded")
+                                }
+                                .addOnFailureListener { exception ->
+                                    longToast("Try Again Later, Error: ${exception.message}")
                                     pd.dismiss()
-                                    finish()
-                                } else pd.setMessage("Images Uploaded: $mImagesUploaded")
-                            }
-                            .addOnFailureListener { exception ->
-                                longToast("Error: ${exception.message}")
-                                pd.dismiss()
-                            }
-                    }
+                                }
+                        }
+                        .addOnFailureListener { exception ->
+                            longToast("Try Again Later, Error: ${exception.message}")
+                            pd.dismiss()
+                        }
                 }
+            }
                 .addOnFailureListener {
-                    longToast("Error: ${it.message}")
+                    longToast("Try Again Later, Error: ${it.message}")
                 }
         }
     }

@@ -3,6 +3,8 @@ package com.noblegas.wecare.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ class AvailableMedicinesFragment : Fragment() {
     private lateinit var mAvailableMedicineChildEventListener: ChildEventListener
 
     private lateinit var mAvailableMedicinesData: ArrayList<DataSnapshot>
+    private lateinit var mAvailableMedicinesAdapter: AvailableMedicinesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,13 +33,15 @@ class AvailableMedicinesFragment : Fragment() {
         mFirebaseStorage = FirebaseStorage.getInstance()
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         mAvailableMedicinesDBRef = mFirebaseDatabase.getReference(AVAILABLE_MEDICINES)
-        mFirebaseDatabase.setPersistenceEnabled(true)
+//        mFirebaseDatabase.setPersistenceEnabled(true)
 
         mAvailableMedicinesData = ArrayList()
+        mAvailableMedicinesAdapter = AvailableMedicinesListAdapter(context!!, mAvailableMedicinesData)
 
         mAvailableMedicineChildEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                mAvailableMedicinesData.add(dataSnapshot)
+                mAvailableMedicinesData.add(0, dataSnapshot)
+                mAvailableMedicinesAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(p0: DatabaseError) {}
@@ -51,7 +56,8 @@ class AvailableMedicinesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mAvailableMedicinesDBRef.addChildEventListener(mAvailableMedicineChildEventListener)
-        available_medicines_list.adapter = AvailableMedicinesListAdapter(context!!, mAvailableMedicinesData)
+        available_medicines_rv.layoutManager = LinearLayoutManager(context)
+        available_medicines_rv.adapter = mAvailableMedicinesAdapter
     }
 
     override fun onDetach() {

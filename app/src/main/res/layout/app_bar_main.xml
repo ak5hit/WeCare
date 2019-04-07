@@ -33,9 +33,11 @@
             android:id="@+id/add_medicine_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
+            app:layout_anchorGravity="bottom|end"
             app:backgroundTint="@color/colorPrimary"
+            app:layout_anchor="@id/main_content_container"
+            app:layout_behavior="com.noblegas.wecare.misc.ScrollAwareFABBehavior"
             app:srcCompat="@drawable/ic_add_white_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,7 +5,8 @@ data class Medicine(
     var quantity: Long = 0,
     var quantityUnit: String = "",
     var expiryDate: Long = 0,
-    var name: String = ""
+    var name: String = "",
+    var imageUrls: HashMap<String, String> = HashMap()
 ) {
-    constructor() : this("", 0, "", 0, "")
+    constructor() : this("", 0, "", 0, "", HashMap())
 }
