@@ -1,7 +1,7 @@
 package com.noblegas.wecare.adapters
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.noblegas.wecare.R
 import java.io.File
 
-class AddMedImageSliderAdapter(private val mContext: Context, private var mSelectedImages: ArrayList<File>) : PagerAdapter() {
+class AddMedImageSliderAdapter(private val mContext: Context, private var mSelectedImages: ArrayList<File>) : androidx.viewpager.widget.PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_image_slider, container, false)

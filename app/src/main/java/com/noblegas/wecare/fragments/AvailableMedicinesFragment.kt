@@ -2,9 +2,9 @@ package com.noblegas.wecare.fragments
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import com.noblegas.wecare.adapters.AvailableMedicinesListAdapter
 import com.noblegas.wecare.models.Medicine
 import kotlinx.android.synthetic.main.fragment_available_medicines.*
 
-class AvailableMedicinesFragment : Fragment() {
+class AvailableMedicinesFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var mFirebaseStorage: FirebaseStorage
     private lateinit var mFirebaseDatabase: FirebaseDatabase
@@ -56,7 +56,8 @@ class AvailableMedicinesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mAvailableMedicinesDBRef.addChildEventListener(mAvailableMedicineChildEventListener)
-        available_medicines_rv.layoutManager = LinearLayoutManager(context)
+        available_medicines_rv.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(context)
         available_medicines_rv.adapter = mAvailableMedicinesAdapter
     }
 

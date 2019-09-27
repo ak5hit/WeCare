@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "243692516848-eo33ihu4ptop66souglnlosaaq8t9a2o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.noblegas.wecare",
+            "certificate_hash": "e5723b6d6cee229d09b7458ad50505dd6c2b4ee2"
+          }
+        },
+        {
           "client_id": "243692516848-ke0rfbcm45pvd259au9c1kk66otqo2cn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -33,20 +41,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "243692516848-3je9oir660aj2hj7hlfqhi8ed2o8636u.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

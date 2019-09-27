@@ -10,12 +10,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -25,7 +25,9 @@ import com.noblegas.wecare.adapters.AddMedImageSliderAdapter
 import com.noblegas.wecare.models.Medicine
 import id.zelory.compressor.Compressor
 import kotlinx.android.synthetic.main.activity_add_medicine.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -86,13 +88,15 @@ class AddMedicineActivity : AppCompatActivity() {
     }
 
     private fun uploadDataToDatabase() {
-        val quantityUnit = quantity_unit.text.toString()
-        val medicineName = medicine_name_input.text.toString()
-        val medicineQuantity = quantity_input.text.toString().toLong()
         val currentUser = FirebaseAuth.getInstance().currentUser
+        val uploaderId = currentUser?.uid ?: ""
+        val uploaderName = currentUser?.displayName ?: ANONYMOUS_STRING
+        val uploaderImageURL = currentUser?.photoUrl.toString()
+
         val medicine = Medicine(
-            currentUser!!.uid, medicineQuantity,
-            quantityUnit, mExpiryDate, medicineName
+            medicine_name_input.text.toString(),
+            quantity_input.text.toString().toLong(), quantity_unit.text.toString(), mExpiryDate,
+            System.currentTimeMillis(), uploaderId, uploaderName, uploaderImageURL
         )
 
         val pd = ProgressDialog(this)
@@ -113,7 +117,7 @@ class AddMedicineActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             //mImagesDownloadUrls.add(it.metadata!!.reference!!.downloadUrl.toString())
                             it.metadata!!.reference!!.downloadUrl.onSuccessTask { url ->
-                                currentMedDbRef.child("imageUrls").push().setValue(url.toString())
+                                currentMedDbRef.child("imageUrls").child("img_$i").setValue(url.toString())
                             }.addOnSuccessListener {
                                     if (++mImagesUploaded == mSelectedImages.size) {
                                         pd.setMessage("Images Uploaded: $mImagesUploaded")
@@ -299,6 +303,7 @@ class AddMedicineActivity : AppCompatActivity() {
         private const val REQUEST_TAKE_PHOTOS = 1
         private const val RC_STORAGE_PERMISSION = 101
 
+        private const val ANONYMOUS_STRING = "Anonymous"
         private const val AVAILABLE_MEDICINES = "availableMedicines"
     }
 }

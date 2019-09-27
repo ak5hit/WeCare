@@ -1,9 +1,9 @@
 package com.noblegas.wecare.misc
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.view.ViewCompat
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.view.ViewCompat
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -18,7 +18,7 @@ class ScrollAwareFABBehavior(context: Context, attributeSet: AttributeSet) :
     FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(
-        coordinatorLayout: CoordinatorLayout,
+        coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout,
         child: FloatingActionButton,
         directTargetChild: View,
         target: View,
@@ -41,7 +41,7 @@ class ScrollAwareFABBehavior(context: Context, attributeSet: AttributeSet) :
     }
 
     override fun onNestedScroll(
-        coordinatorLayout: CoordinatorLayout, child: FloatingActionButton,
+        coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout, child: FloatingActionButton,
         target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int
     ) {
         super.onNestedScroll(
